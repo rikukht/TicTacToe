@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="turno1">Jugador X</string>
+    <string name="turno2">Jugador O</string>
+    <string name="app_name">TicTacToe</string>
+    <string name="casilla_vacia"></string>
+    <string name="new_game">New Game</string>
+    <string name="exit_game">Exit</string>
+
+</resources>
