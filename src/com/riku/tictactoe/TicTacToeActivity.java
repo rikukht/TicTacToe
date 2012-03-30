@@ -1,6 +1,8 @@
 package com.riku.tictactoe;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +17,9 @@ public class TicTacToeActivity extends Activity implements OnClickListener {
 	Button boton1, boton2, boton3, boton4, boton5, boton6, boton7, boton8,
 			boton9;
 	TextView text;
-	int jugador = 1;
+	AlertDialog.Builder builder;
+	AlertDialog alert;
+	private int jugador = 1;
 
 	public static final int JUGADOR1 = 1;
 	public static final int JUGADOR2 = 2;
@@ -52,49 +56,47 @@ public class TicTacToeActivity extends Activity implements OnClickListener {
 		switch (id) {
 		case R.id.button1:
 			marcarCasilla(boton1);
-			CambiarTurno();
 			boton1.setEnabled(false);
 			break;
 		case R.id.button2:
 			marcarCasilla(boton2);
-			CambiarTurno();
 			boton2.setEnabled(false);
 			break;
 		case R.id.button3:
 			marcarCasilla(boton3);
-			CambiarTurno();
 			boton3.setEnabled(false);
+
 			break;
 		case R.id.button4:
 			marcarCasilla(boton4);
-			CambiarTurno();
 			boton4.setEnabled(false);
 			break;
 		case R.id.button5:
 			marcarCasilla(boton5);
-			CambiarTurno();
 			boton5.setEnabled(false);
 			break;
 		case R.id.button6:
 			marcarCasilla(boton6);
-			CambiarTurno();
 			boton6.setEnabled(false);
 			break;
 		case R.id.button7:
 			marcarCasilla(boton7);
-			CambiarTurno();
 			boton7.setEnabled(false);
 			break;
 		case R.id.button8:
 			marcarCasilla(boton8);
-			CambiarTurno();
 			boton8.setEnabled(false);
 			break;
 		case R.id.button9:
 			marcarCasilla(boton9);
-			CambiarTurno();
 			boton9.setEnabled(false);
 			break;
+
+		}
+		if (comprobarTablero()) {
+			partidaGanada();
+		} else {
+			cambiarTurno();
 
 		}
 
@@ -108,19 +110,89 @@ public class TicTacToeActivity extends Activity implements OnClickListener {
 
 		} else {
 			b.setBackgroundResource(R.drawable.oiconb);
-			b.setTag("0");
+			b.setTag("2");
 		}
 
 	}
 
-	public Boolean ComprobarTablero() {
-		//if (boton1)
-		return true;
+	public Boolean comprobarTablero() {
+		boolean result = false;
+		// Boton1
+		if (boton1.getTag().toString().equals(boton2.getTag().toString())
+				&& boton1.getTag().toString()
+						.equals(boton3.getTag().toString())
+				&& !boton1.getTag().toString().equals("0"))
+			result = true;
+		else if (boton1.getTag().toString().equals(boton5.getTag().toString())
+				&& boton1.getTag().toString()
+						.equals(boton9.getTag().toString())
+				&& !boton1.getTag().toString().equals("0"))
+			result = true;
+		else if (boton1.getTag().toString().equals(boton4.getTag().toString())
+				&& boton1.getTag().toString()
+						.equals(boton7.getTag().toString())
+				&& !boton1.getTag().toString().equals("0"))
+			result = true;
+		// Boton2
+		else if (boton2.getTag().toString().equals(boton5.getTag().toString())
+				&& boton2.getTag().toString()
+						.equals(boton9.getTag().toString())
+				&& !boton2.getTag().toString().equals("0"))
+			result = true;
+		// Boton3
+		else if (boton3.getTag().toString().equals(boton6.getTag().toString())
+				&& boton3.getTag().toString()
+						.equals(boton9.getTag().toString())
+				&& !boton3.getTag().toString().equals("0"))
+			result = true;
+		// Boton4
+		else if (boton4.getTag().toString().equals(boton5.getTag().toString())
+				&& boton4.getTag().toString()
+						.equals(boton6.getTag().toString())
+				&& !boton4.getTag().toString().equals("0"))
+			result = true;
+		// boton5-- Diagonal 7,5,3
+		else if (boton5.getTag().toString().equals(boton7.getTag().toString())
+				&& boton5.getTag().toString()
+						.equals(boton3.getTag().toString())
+				&& !boton5.getTag().toString().equals("0"))
+			result = true;
+		// boton7
+		else if (boton7.getTag().toString().equals(boton8.getTag().toString())
+				&& boton7.getTag().toString()
+						.equals(boton9.getTag().toString())
+				&& !boton7.getTag().toString().equals("0"))
+			result = true;
+		// si ninguno se cumple retorna False
+		return result;
 
 	}
 
+	public void partidaGanada() {
+		boton1.setEnabled(false);
+		boton2.setEnabled(false);
+		boton3.setEnabled(false);
+		boton4.setEnabled(false);
+		boton5.setEnabled(false);
+		boton6.setEnabled(false);
+		boton7.setEnabled(false);
+		boton8.setEnabled(false);
+		boton9.setEnabled(false);
+
+		builder = new AlertDialog.Builder(this);
+		builder.setMessage(text.getText().toString() + " ha ganado")
+				.setCancelable(false)
+				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+		alert = builder.create();
+		alert.show();
+	}
+
 	// CAMBIA EL TURNO DE LOS JUGADORES Y EL TEXTO DEL TEXTVIEW
-	public void CambiarTurno() {
+	public void cambiarTurno() {
 		if (jugador == JUGADOR1) {
 			jugador = JUGADOR2;
 			text.setText(R.string.turno2);
@@ -146,16 +218,33 @@ public class TicTacToeActivity extends Activity implements OnClickListener {
 			newGame();
 			return true;
 		case R.id.exit:
-			System.exit(0);
-			return true;
+			builder = new AlertDialog.Builder(this);
+			builder.setMessage("¿Quieres salir del juego?")
+					.setPositiveButton("Si",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									System.exit(0);
+								}
+							})
+					.setNegativeButton("No",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+
+			alert = builder.create();
+			alert.show();
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 
 	}
-	
-	//Accion del juego nuevo
-	//limpia todo el tablero.
+
+	// Accion del juego nuevo
+	// limpia todo el tablero.
 	public void newGame() {
 		vaciarCasilla(boton1);
 		vaciarCasilla(boton2);
@@ -168,10 +257,11 @@ public class TicTacToeActivity extends Activity implements OnClickListener {
 		vaciarCasilla(boton9);
 	}
 
-	//Resetea la casilla.
+	// Resetea la casilla.
 	public void vaciarCasilla(Button b) {
 		b.setBackgroundResource(R.drawable.backgroud);
 		b.setEnabled(true);
+		b.setTag("0");
 	}
 
 }
